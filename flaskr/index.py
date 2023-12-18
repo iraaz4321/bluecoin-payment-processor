@@ -5,6 +5,11 @@ from flask import (
 
 bp = Blueprint('index', __name__, url_prefix="/")
 
-@bp.route("/", methods=('GET',))
+@bp.route("/payment/", methods=('GET',))
 def index():
-    return render_template("index.html")
+    transaction = {"cost": 50, "account": "placeholder"}
+    return render_template("index.html", transaction=transaction)
+
+@bp.route("/terms/", methods=('GET',))
+def terms():
+    return render_template("terms.html")

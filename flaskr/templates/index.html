@@ -2,9 +2,42 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment gateway</title>
+    <link href="https://fonts.googleapis.com/css?family=Nunito:400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{url_for('static',filename='dist/css/output.css')}}">
 </head>
 <body>
-<p>TEST</p>
+    <div class="bg-gradient-to-r from-indigo-800 via-blue-600 to-purple-600 w-screen h-screen flex items-center justify-center">
+        <div class="bg-indigo-200 max-w-screen-sm mx-auto h-3/5 w-full border border-indigo-900 rounded flex flex-col drop-shadow-2xl">
+
+            <div>
+                <p class="text-2xl text-center mt-4 font-nunito">Bluecoin payment</p>
+            </div>
+
+            <div class="flex-1 flex mt-6">
+
+                <div class="w-1/2 p-4">
+                    <p class="text-lg font-semibold">Item Name</p>
+                    <p class="text-sm">Cost: {{transaction.cost}}</p>
+                    <p class="text-sm">Paid: 0</p>
+                </div>
+
+                <div class="w-1/2 p-4">
+                    <p class="text-lg font-semibold">Payment</p>
+                    <p>Account: {{transaction.account}}</p>
+
+                </div>
+
+            </div>
+            <div class="flex justify-center mt-4">
+                <a target="_blank" rel="noopener noreferrer" href="/terms" class="mx-2">Terms</a>
+                <a target="_blank" rel="noopener noreferrer" href="/api" class="mx-2">API</a>
+            </div>
+
+        </div>
+
+    </div>
 </body>
 </html>
