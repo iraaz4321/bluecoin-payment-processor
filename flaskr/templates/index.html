@@ -7,6 +7,7 @@
     <title>Payment gateway</title>
     <link href="https://fonts.googleapis.com/css?family=Nunito:400,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{url_for('static',filename='dist/css/output.css')}}">
+
 </head>
 <body>
     <div class="bg-gradient-to-r from-indigo-800 via-blue-600 to-purple-600 w-screen h-screen flex items-center justify-center">
@@ -39,5 +40,31 @@
         </div>
 
     </div>
+    <script>
+        function check_payment() {
+            console.log("HI")
+            const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString);
+            acc = urlParams.get('a')
+            data = {"account": acc}
+            fetch(window.location.origin+"/api/payment_state/", {
+                method: "POST",
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            }).then(res => res.json())
+            .then((data) => {
+                console.log(data)
+                if (data["redirect_url"] !== undefined) {
+                    window.location.replace(data["redirect_url"]);
+                }
+            }).catch(error => {
+
+            });
+
+            setTimeout(check_payment, 2000)
+        }
+
+        check_payment()
+    </script>
 </body>
 </html>

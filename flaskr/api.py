@@ -40,6 +40,13 @@ def payment_state():
     if wallet is None:
         return "The 'account' parameter is missing or invalid", 400
 
+    with get_db() as db:
+        cursor = db.execute("SELECT redirect_url FROM transaction_history WHERE wallet=?", (wallet,))
+        if cursor is not None:
+            one = cursor.fetchone()
+            if one is not None:
+                return jsonify({"paid": 0, "cost": 0, "redirect_url": list(one)[0]})
+
     balance = account_utils.get_balance(wallet)
     with get_db() as db:
         cursor = db.execute("SELECT amount, receiver, redirect_url FROM pending WHERE wallet=?", (wallet,))
@@ -47,11 +54,19 @@ def payment_state():
             return "Transaction expired!", 404
 
         transaction_data = list(cursor.fetchone())
-
-    if transaction_data[0] <= balance:
+    print((transaction_data[0]) <= float(balance), balance, transaction_data[0], transaction_data[1], wallet, flush=True)
+    if float(transaction_data[0]) <= float(balance):
         receiver = transaction_data[1]
         redirect_url = transaction_data[2]
-        account_utils.new_taxed_transfer(wallet, receiver, transaction_data[0])
-        return jsonify({"paid": balance, "cost": transaction_data[0], "redirect_url": redirect_url})
+        account_utils.new_taxed_transfer(wallet, receiver, float(transaction_data[0]))
 
-    return jsonify({"paid": balance, "cost": transaction_data[0]})
+        db = get_db()
+        db.execute(
+            "INSERT INTO transaction_history (receiver, payment_time, amount, redirect_url, wallet) VALUES (?, ?, ?, ?, ?)",
+            (receiver, int(time.time()), float(transaction_data[0]), redirect_url, wallet),
+        )
+        db.commit()
+
+        return jsonify({"paid": balance, "cost": float(transaction_data[0]), "redirect_url": redirect_url})
+
+    return jsonify({"paid": balance, "cost": float(transaction_data[0])})
