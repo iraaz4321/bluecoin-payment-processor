@@ -38,3 +38,6 @@ def generate_wallet():
 
 def get_balance(wallet):
     return balance(wallet, get_password_by_username(wallet))
+
+def new_taxed_transfer(wallet, receiver, amount):
+    return transfer(wallet, get_password_by_username(wallet), receiver, amount)
