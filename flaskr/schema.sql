@@ -15,7 +15,7 @@ CREATE TABLE pending (
 );
 
 CREATE TABLE transaction_history (
-  receiver TEXT UNIQUE NOT NULL,
+  receiver TEXT NOT NULL,
   wallet TEXT,
   payment_time INTEGER,
   amount INTEGER,

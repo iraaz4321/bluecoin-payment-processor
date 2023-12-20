@@ -45,7 +45,7 @@ def payment_state():
         if cursor is not None:
             one = cursor.fetchone()
             if one is not None:
-                return jsonify({"paid": 0, "cost": 0, "redirect_url": list(one)[0]})
+                return jsonify({"paid": 0, "cost": 0, "redirect_url": list(one)[0]}), 200
 
     balance = account_utils.get_balance(wallet)
     with get_db() as db:
@@ -67,6 +67,6 @@ def payment_state():
         )
         db.commit()
 
-        return jsonify({"paid": balance, "cost": float(transaction_data[0]), "redirect_url": redirect_url})
+        return jsonify({"paid": balance, "cost": float(transaction_data[0]), "redirect_url": redirect_url}), 200
 
-    return jsonify({"paid": balance, "cost": float(transaction_data[0])})
+    return jsonify({"paid": balance, "cost": float(transaction_data[0])}), 204
